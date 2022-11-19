@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcutGen", "mcutGen\mcutGen.csproj", "{50F0C802-5A16-4713-8679-13233DAA9EA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evergine.Bindings.mcut", "Evergine.Bindings.mcut\Evergine.Bindings.mcut.csproj", "{EC19C8E3-549F-4D58-8001-3D0CAA40D60D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50F0C802-5A16-4713-8679-13233DAA9EA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50F0C802-5A16-4713-8679-13233DAA9EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50F0C802-5A16-4713-8679-13233DAA9EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50F0C802-5A16-4713-8679-13233DAA9EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC19C8E3-549F-4D58-8001-3D0CAA40D60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC19C8E3-549F-4D58-8001-3D0CAA40D60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC19C8E3-549F-4D58-8001-3D0CAA40D60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC19C8E3-549F-4D58-8001-3D0CAA40D60D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8BDD1F27-F402-4F82-97E0-AD7E54C38B8D}
+	EndGlobalSection
+EndGlobal
