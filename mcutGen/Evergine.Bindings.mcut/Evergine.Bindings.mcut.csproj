@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
 	  <PackageIcon>icon.png</PackageIcon>
 	  <RepositoryUrl>https://github.com/EvergineTeam/mcut.net</RepositoryUrl>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

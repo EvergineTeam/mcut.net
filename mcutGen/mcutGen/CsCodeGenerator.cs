@@ -24,8 +24,8 @@ namespace mcutGen
                     .Select(t => t.Name).ToList();
 
             GenerateEnums(compilation, outputPath);
+            GenerateDelegates(compilation, outputPath);
             GenerateFunctions(compilation, outputPath);
-            GenerateStructs(compilation, outputPath);
         }
 
         private void GenerateEnums(CppCompilation compilation, string outputPath)
@@ -35,7 +35,7 @@ namespace mcutGen
             using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Enums.cs")))
             {
                 file.WriteLine("using System;\n");
-                file.WriteLine("namespace Evergine.Bindings.mcut");
+                file.WriteLine("namespace Evergine.Bindings.Mcut");
                 file.WriteLine("{");
 
                 foreach (var cppEnum in compilation.Enums)
@@ -62,14 +62,91 @@ namespace mcutGen
             }
         }
 
-        private void GenerateFunctions(CppCompilation compilation, string outputPath)
+        private void GenerateDelegates(CppCompilation compilation, string outputPath)
         {
-            
+            Debug.WriteLine("Generating Delegates...");
+
+            var delegates = compilation.Typedefs
+                .Where(t => t.TypeKind == CppTypeKind.Typedef
+                       && t.ElementType is CppPointerType
+                       && ((CppPointerType)t.ElementType).ElementType.TypeKind == CppTypeKind.Function)
+                .ToList();
+
+            using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Delegates.cs")))
+            {
+                file.WriteLine("using System;");
+                file.WriteLine("using System.Runtime.InteropServices;\n");
+                file.WriteLine("namespace Evergine.Bindings.Mcut");
+                file.WriteLine("{");
+
+                foreach (var funcPointer in delegates)
+                {
+                    Helpers.PrintComments(file, funcPointer.Comment, "\t");
+                    CppFunctionType pointerType = ((CppPointerType)funcPointer.ElementType).ElementType as CppFunctionType;
+
+                    var returnType = Helpers.ConvertToCSharpType(pointerType.ReturnType);
+                    file.Write($"\tpublic unsafe delegate {returnType} {funcPointer.Name}(");
+
+                    if (pointerType.Parameters.Count > 0)
+                    {
+                        file.Write("\n");
+
+                        for (int i = 0; i < pointerType.Parameters.Count; i++)
+                        {
+                            if (i > 0)
+                                file.Write(",\n");
+
+                            var parameter = pointerType.Parameters[i];
+                            var convertedType = Helpers.ConvertToCSharpType(parameter.Type);
+                            file.Write($"\t\t {convertedType} {parameter.Name}");
+                        }
+                    }
+
+                    file.Write(");\n\n");
+                }
+
+                file.WriteLine("}");
+            }
         }
 
-        private void GenerateStructs(CppCompilation compilation, string outputPath)
+        private void GenerateFunctions(CppCompilation compilation, string outputPath)
         {
-            
+            Debug.WriteLine("Generating Functions...");
+
+            using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Functions.cs")))
+            {
+                file.WriteLine("using System;");
+                file.WriteLine("using System.Runtime.InteropServices;\n");
+                file.WriteLine("namespace Evergine.Bindings.Mcut");
+                file.WriteLine("{");
+                file.WriteLine($"\tpublic static unsafe class McutNative");
+                file.WriteLine("\t{");
+                foreach (var function in compilation.Functions)
+                {
+                    Helpers.PrintComments(file, function.Comment, "\t\t");
+                    file.WriteLine($"\t\t[DllImport(\"mcut\", CallingConvention = CallingConvention.Cdecl)]");
+                    var returnType = Helpers.ConvertToCSharpType(function.ReturnType);
+                    file.Write($"\t\tpublic static extern {returnType} {function.Name}(");
+
+                    if (function.Parameters.Count > 0)
+                    {
+                        for (int i = 0; i < function.Parameters.Count; i++)
+                        {
+                            if (i > 0)
+                                file.Write(", ");
+
+                            var parameter = function.Parameters[i];
+                            var convertedType = Helpers.ConvertToCSharpType(parameter.Type);
+                            file.Write($"{convertedType} {parameter.Name}");
+                        }
+                    }
+
+                    file.Write(");\n\n");
+                }
+
+                file.WriteLine("\t}");
+                file.WriteLine("}");
+            }
         }
     }
 }

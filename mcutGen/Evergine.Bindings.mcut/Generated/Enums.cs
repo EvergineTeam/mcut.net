@@ -1,6 +1,6 @@
 using System;
 
-namespace Evergine.Bindings.mcut
+namespace Evergine.Bindings.Mcut
 {
 	/// <summary>
 	/// This enum structure defines the possible return values of API functions (integer). The values identify whether a function executed successfully or returned with an error.
